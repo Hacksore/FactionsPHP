@@ -96,12 +96,14 @@ class faction{
 		return $ret;
 	}
 
-	function getFactionLand($fid){
+	function getFactionLand($fid, $worlds = array("world")){
 		$land = 0;
-		foreach($this->board_json["world"] as $k=>$v){
-			if($fid == $v){
-				$land++;
-			}
+		foreach($worlds as $w){
+			foreach($this->board_json[$w] as $k=>$v){
+				if($fid == $v){
+					$land++;
+				}
+			}	
 		}
 		return $land;
 	}
