@@ -2,21 +2,17 @@
 
 class faction{
 
-	function faction($faction = "factions.json", $players = "players.json", $board = "board.json", $conf = "conf.json"){
-		$this->factions = $faction;
-		$this->players = $players;
-		$this->board = $board;
-		$this->conf = $conf;
-		$this->factions_json = json_decode(file_get_contents($this->factions), true);
-		$this->players_json = json_decode(file_get_contents($this->players), true);
-		$this->board_json = json_decode(file_get_contents($this->board), true);
-		$this->conf_json = json_decode(file_get_contents($this->conf), true);
+	function faction($f = "factions.json", $p = "players.json", $b = "board.json", $c = "conf.json"){
+
+		$this->factions = json_decode(file_get_contents($f), true);
+		$this->players = json_decode(file_get_contents($p), true);
+		$this->board = json_decode(file_get_contents($b), true);
+		$this->conf = json_decode(file_get_contents($c), true);
 
 	}
 
-	function getFactionIdFromTagname($fname){
-		$json = json_decode(file_get_contents($this->factions), true);
-		foreach($json as $k=>$v){
+	function getFactionIdFromTagname($fname){		
+		foreach($this->factions as $k=>$v){
 			if($v["tag"] == $fname){
 				return $k;
 			}
@@ -25,7 +21,7 @@ class faction{
 	}
 
 	function getFactionIdFromUsername($username){
-		foreach($this->players_json as $k=>$v){
+		foreach($this->players as $k=>$v){
 			if($k == $username){			
 				return $v["factionId"];
 			}			
@@ -33,7 +29,7 @@ class faction{
 	}
 
 	function getAllPlayers(){
-		return $this->players_json;
+		return $this->players;
 	}
 
 	function getAllFactions(){
@@ -43,30 +39,30 @@ class faction{
 			"SafeZone"
 		);
 		foreach($skip as $k){
-			unset($this->factions_json[$this->getFactionIdFromTagname($k)]);
+			unset($this->factions[$this->getFactionIdFromTagname($k)]);
 		}
-		return $this->factions_json;
+		return $this->factions;
 	}
 
 	function getPlayersFaction($fid){
-		return $this->factions_json[$fid]["tag"];
+		return $this->factions[$fid]["tag"];
 	}	
 
 	function getPlayerFactionRole($user){
-		return $this->players_json[$user]["role"] == "ADMIN" ? "**" : ($this->players_json[$user]["role"] == "MODERATOR" ? "*" : "" ); 
+		return $this->players[$user]["role"] == "ADMIN" ? "**" : ($this->players[$user]["role"] == "MODERATOR" ? "*" : "" ); 
 	}	
 
 	function getPlayerPower($user){
-		return floor($this->players_json[$user]["power"]);
+		return floor($this->players[$user]["power"]);
 	}
 
 	function getFactionTag($fid){
-		return $this->factions_json[$fid]["tag"];
+		return $this->factions[$fid]["tag"];
 	}
 
 	function getFactionMembers($fid){	
 		$users = array();
-		foreach($this->players_json as $k=>$v){
+		foreach($this->players as $k=>$v){
 			if($v["factionId"] == $fid){			
 				$users["list"] .= $this->getPlayerFactionRole($k).$k.", ";
 				$users["array"][] = $k;		
@@ -79,7 +75,7 @@ class faction{
 
 	function getFactionPower($fid){		
 		$pow = 0;
-		foreach($this->players_json as $k=>$v){
+		foreach($this->players as $k=>$v){
 			if($v["factionId"] == $fid){
 				$pow += floor($v["power"]);
 			}
@@ -89,7 +85,7 @@ class faction{
 
 	function getFactiomMaxPower($fid){
 		$members = $this->getFactionMembers($fid);
-		$pow = $this->conf_json["powerPlayerMax"];
+		$pow = $this->conf["powerPlayerMax"];
 		$ret = 0;
 		for($i=0;$i<count($members["array"]);$i++){
 			$ret += $pow;
@@ -100,7 +96,7 @@ class faction{
 	function getFactionLand($fid, $worlds = array("world")){
 		$land = 0;
 		foreach($worlds as $w){
-			foreach($this->board_json[$w] as $k=>$v){
+			foreach($this->board[$w] as $k=>$v){
 				if($fid == $v){
 					$land++;
 				}
