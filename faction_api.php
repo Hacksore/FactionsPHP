@@ -53,8 +53,9 @@ class faction{
 	}	
 
 	function getPlayerFactionRole($user){
-		return $this->players_json[$user]["role"];
+		return $this->players_json[$user]["role"] == "ADMIN" ? "**" : ($this->players_json[$user]["role"] == "MODERATOR" ? "*" : "" ); 
 	}	
+
 	function getPlayerPower($user){
 		return floor($this->players_json[$user]["power"]);
 	}
@@ -67,7 +68,7 @@ class faction{
 		$users = array();
 		foreach($this->players_json as $k=>$v){
 			if($v["factionId"] == $fid){			
-				$users["list"] .= $k.", ";
+				$users["list"] .= $this->getPlayerFactionRole($k).$k.", ";
 				$users["array"][] = $k;		
 			}			
 		}
