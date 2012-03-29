@@ -2,11 +2,11 @@ A simple php class for using data from factions json files.
 
 Example usage of the class:
 
-<pre>
+<code>
 <?php
 require "faction_api.php"
 $cl = new faction();
 
 print_r($cl->getAllPlayers()); //returns an array of every player in a faction.
 ?>
-</pre>
+</code>
