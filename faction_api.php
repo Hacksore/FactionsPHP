@@ -2,7 +2,7 @@
 
 class faction{
 
-	function faction($f = "factions.json", $p = "players.json", $b = "board.json", $c = "conf.json"){
+	function __construct($f = "factions.json", $p = "players.json", $b = "board.json", $c = "conf.json"){
 
 		$this->factions = json_decode(file_get_contents($f), true);
 		$this->players = json_decode(file_get_contents($p), true);
