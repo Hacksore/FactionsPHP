@@ -93,14 +93,17 @@ class faction{
 		return $ret;
 	}
 
+
 	function getFactionLand($fid, $worlds = array("world")){
 		$land = 0;
 		foreach($worlds as $w){
-			foreach($this->board[$w] as $k=>$v){
-				if($fid == $v){
-					$land++;
+			if($this->board[$w] != null) { 
+				foreach($this->board[$w] as $k=>$v){
+					if($fid == $v){
+						$land++;
+					}
 				}
-			}	
+			}
 		}
 		return $land;
 	}
